@@ -72,7 +72,7 @@
 </head>
 <body>
   <main class="controle">
-    <form id="loginForm">
+    <form id="loginForm" action="">
       <h1>Controle de Pagamento</h1>
       <div class="input-container">
         <input placeholder="Usuário" type="email" id="email" name="email" required>
@@ -94,8 +94,8 @@
       event.preventDefault(); // Previne o envio do formulário
       document.getElementById('emailError').textContent = '';
       document.getElementById('passwordError').textContent = '';
-      let email = document.getElementById('email').value.trim();
-      let password = document.getElementById('password').value.trim();
+      let email = document.getElementById('email').value;
+      let password = document.getElementById('password').value;
       let isValid = true;
       if (!email || !email.includes('@')) {
         document.getElementById('emailError').textContent = 'Por favor, insira um e-mail válido.';
@@ -107,7 +107,7 @@
       }
       if (isValid) {
         alert('Login realizado com sucesso!');
-        // Aqui você pode redirecionar o usuário para outra página
+        // Redirecionar para outra página (opcional)
         // Exemplo: window.location.href = "pagina_principal.html";
       }
     });
