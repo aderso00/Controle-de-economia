@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+  <titl>Controle de Pagamento</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .controle {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .input-container {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-container input {
+      width: 100%;
+      padding: 10px;
+      padding-left: 35px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .bx {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      color: #888;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <main class="controle">
+    <form action="Controle de Pagamentos.html">
+      <h1>Controle de Pagamento</h1>
+
+      <div class="input-container">
+        <input placeholder="Usuário" type="email" id="email" name="email" required>
+        <i class="bx bxs-user"></i>
+        <span class="error" id="emailError"></span>
+      </div>
+
+      <div class="input-container">
+        <input placeholder="Senha" type="password" id="password" name="password" required>
+        <i class="bx bxs-lock-alt"></i>
+        <span class="error" id="passwordError"></span>
+      </div>
+
+      <div>
+        <button type="submit">Login</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Previne o envio do formulário
+
+      // Resetando mensagens de erro
+      document.getElementById('emailError').textContent = '';
+      document.getElementById('passwordError').textContent = '';
+
+      // Obtendo os valores dos campos
+      let email = document.getElementById('email').value;
+      let password = document.getElementById('password').value;
+      let isValid = true;
+
+      // Validação de email
+      if (!email || !email.includes('@')) {
+        document.getElementById('emailError').textContent = 'Por favor, insira um e-mail válido.';
+        isValid = false;
+      }
+
+      // Validação de senha
+      if (!password || password.length < 6) {
+        document.getElementById('passwordError').textContent = 'A senha deve ter pelo menos 6 caracteres.';
+        isValid = false;
+      }
+
+      // Se as validações passarem, pode enviar o formulário
+      if (isValid) {
+        alert('Login realizado com sucesso!');
+        // Aqui você pode redirecionar ou realizar a lógica necessária após o login
+        // Por exemplo, window.location.href = "pagina_principal.html";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Pagamentos</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 15px;
+    }
+
+    h1 {
+      color: #4CAF50;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .input-container {
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 15px;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .input-container label {
+      font-size: 12px;
+      display: block;
+      margin-top: 8px;
+    }
+
+    .input-container input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .input-container input:focus {
+      border-color: #4CAF50;
+    }
+
+    button {
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    table {
+      width: 100%;
+      max-width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 12px;
+    }
+
+    table th, table td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    table th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .pago {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .devendo {
+      background-color: #ffc107;
+      color: black;
+    }
+
+    .atrasado {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .total {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      text-align: center;
+      max-width: 100%;
+    }
+
+    .total span {
+      display: block;
+      font-size: 14px;
+      margin: 4px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Controle de Pagamentos</h1>
+
+  <div class="input-container">
+    <label for="nome">Nome do Cliente:</label>
+    <input type="text" id="nome" placeholder="Digite o nome do cliente" required>
+
+    <label for="produto">Produto:</label>
+    <input type="text" id="produto" placeholder="Digite o produto comprado" required>
+
+    <label for="total">Valor Total:</label>
+    <input type="number" id="total" placeholder="Digite o valor total" required>
+
+    <label for="pago">Valor Pago:</label>
+    <input type="number" id="pago" placeholder="Digite o valor pago" required>
+
+    <label for="data-vencimento">Data de Vencimento:</label>
+    <input type="date" id="data-vencimento" required>
+
+    <button onclick="adicionarPagamento()">Adicionar Pagamento</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Produto</th>
+        <th>Valor Total</th>
+        <th>Pago</th>
+        <th>Devido</th>
+        <th>Data</th>
+        <th>Status</th>
+        <th>Comprovante</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-clientes">
+      <!-- Linhas dinâmicas -->
+    </tbody>
+  </table>
+
+  <div class="total">
+    <span>Lucros: R$ <span id="lucros-mes">0.00</span></span>
+    <span>A Receber (Dentro do Prazo): R$ <span id="devendo-prazo">0.00</span></span>
+    <span>Dívidas Vencidas: R$ <span id="dividas-vencidas">0.00</span></span>
+  </div>
+
+  <script>
+    let lucrosMes = 0;
+    let devendoPrazo = 0;
+    let dividasVencidas = 0;
+
+    function adicionarPagamento() {
+      const nome = document.getElementById("nome").value;
+      const produto = document.getElementById("produto").value;
+      const total = parseFloat(document.getElementById("total").value);
+      const pago = parseFloat(document.getElementById("pago").value);
+      const dataVencimento = new Date(document.getElementById("data-vencimento").value);
+      const hoje = new Date();
+      const devido = total - pago;
+
+      if (nome && produto && !isNaN(total) && !isNaN(pago) && dataVencimento) {
+        const tabela = document.getElementById("tabela-clientes");
+        const tr = document.createElement("tr");
+        let status = "";
+
+        if (devido <= 0) {
+          status = "Pago";
+          tr.classList.add("pago");
+          lucrosMes += total;
+        } else if (hoje <= dataVencimento) {
+          status = "Dentro do Prazo";
+          tr.classList.add("devendo");
+          devendoPrazo += devido;
+        } else {
+          status = "Vencido";
+          tr.classList.add("atrasado");
+          dividasVencidas += devido;
+        }
+
+        tr.innerHTML = `
+          <td>${nome}</td>
+          <td>${produto}</td>
+          <td>R$ ${total.toFixed(2)}</td>
+          <td>R$ ${pago.toFixed(2)}</td>
+          <td>R$ ${devido.toFixed(2)}</td>
+          <td>${hoje.toLocaleDateString()}</td>
+          <td>${status}</td>
+          <td><button onclick="baixarComprovante('${nome}', '${produto}', ${pago}, ${devido})">Baixar</button></td>
+        `;
+        tabela.appendChild(tr);
+
+        atualizarTotais();
+      } else {
+        alert("Preencha todos os campos corretamente.");
+      }
+    }
+
+    function baixarComprovante(nome, produto, pago, devido) {
+      const texto = `
+        Nome do Cliente: ${nome}
+        Produto: ${produto}
+        Valor Pago: R$ ${pago.toFixed(2)}
+        Valor Devido: R$ ${devido.toFixed(2)}
+      `;
+
+      const blob = new Blob([texto], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `Comprovante-${nome}.txt`;
+      link.click();
+    }
+
+    function atualizarTotais() {
+      document.getElementById("lucros-mes").innerText = lucrosMes.toFixed(2);
+      document.getElementById("devendo-prazo").innerText = devendoPrazo.toFixed(2);
+      document.getElementById("dividas-vencidas").innerText = dividasVencidas.toFixed(2);
+    }
+  </script>
+</body>
+</html>
